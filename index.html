@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="libraries/interact.js/dist/interact.min.js"></script>
+    <style>
+      .draggable {
+        width: 150px;
+        height: 150px;
+
+        -webkit-transform: translate(0px, 0px);
+                transform: translate(0px, 0px);
+      }
+      
+      #drag-area {
+        width: 1300px;
+        height: 1300px;
+        border: 5px dotted black;
+      }
+      
+      #play-area {
+        position: absolute;
+        margin-left: 500px;
+        margin-top: 500px;
+        border: 5px solid red;
+        width: 300px;
+        height: 300px;
+      }
+    </style>
+    <script>
+      // target elements with the "draggable" class
+      interact('.draggable')
+        .draggable({
+          // enable inertial throwing
+          inertia: true,
+          // keep the element within the area of it's parent
+          restrict: {
+            restriction: "parent",
+            endOnly: true,
+            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+          },
+          // enable autoScroll
+          autoScroll: true,
+
+          // call this function on every dragmove event
+          onmove: dragMoveListener,
+          // call this function on every dragend event
+          onend: function (event) {
+            var textEl = event.target.querySelector('p');
+
+            textEl && (textEl.textContent =
+              'moved a distance of '
+              + (Math.sqrt(event.dx * event.dx +
+                           event.dy * event.dy)|0) + 'px');
+          }
+        });
+
+        function dragMoveListener (event) {
+          var target = event.target,
+              // keep the dragged position in the data-x/data-y attributes
+              x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+              y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+          // translate the element
+          target.style.webkitTransform =
+          target.style.transform =
+            'translate(' + x + 'px, ' + y + 'px)';
+
+          // update the posiion attributes
+          target.setAttribute('data-x', x);
+          target.setAttribute('data-y', y);
+        }
+
+        // this is used later in the resizing and gesture demos
+        window.dragMoveListener = dragMoveListener;
+    </script>
+  </head>
+  <body>
+    <div id="drag-area">      
+      <div id="play-area"></div>
+      <img src="assets/marker1.jpg" class="draggable" />
+      <img src="assets/marker2.jpg" class="draggable" />
+      <img src="assets/marker3.jpg" class="draggable" />
+      <img src="assets/marker4.jpg" class="draggable" />
+    </div>
+  </body>
+</html>

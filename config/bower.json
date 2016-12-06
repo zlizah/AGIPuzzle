@@ -1,0 +1,10 @@
+{
+  "name": "agi-puzzle",
+  "description": "",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "interact.js": "*"
+  }
+}

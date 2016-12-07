@@ -88,7 +88,7 @@
         overlap: 'center',
       });
 
-      // tap event
+      // tap event (rotation)
       interact('.draggable').on('tap', function (event) {
         function pad (str, max) {
           str = str.toString();
@@ -104,8 +104,10 @@
           return;
         }
         
-        var newrot = '-' + pad(parseInt(match[0].substring(1,4)) + 90 % 360, 3);
-        console.log(newrot);
+        //find the image with the next rotation
+        var newrot = parseInt(match[0].substring(1,4)) + 90;
+        newrot = newrot % 360;
+        newrot = '-' + pad(newrot, 3);
         target.src = src.replace(match, newrot);
       });
     </script>
@@ -119,9 +121,9 @@
         <div class="dropzone"></div>
       </div>
       <img src="assets/marker1-000.jpg" class="draggable" />
-      <img src="assets/marker2.jpg" class="draggable" />
-      <img src="assets/marker3.jpg" class="draggable" />
-      <img src="assets/marker4.jpg" class="draggable" />
+      <img src="assets/marker2-000.jpg" class="draggable" />
+      <img src="assets/marker3-000.jpg" class="draggable" />
+      <img src="assets/marker4-000.jpg" class="draggable" />
     </div>
   </body>
 </html>

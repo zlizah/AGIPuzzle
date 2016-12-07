@@ -10,7 +10,7 @@
       .draggable {
         width: 250px;
         height: 250px;
-
+        float: left;
         -webkit-transform: translate(0px, 0px);
                 transform: translate(0px, 0px);
       }
@@ -19,55 +19,57 @@
         width: 1800px;
         height: 1000px;
         border: 5px dotted black;
+        position: relative;
       }
       
       #play-area {
-        position: absolute;
-        margin-left: 650px;
-        margin-top: 250px;
-        border: 5px solid red;
         width: 500px;
         height: 500px;
+        margin-top: 228px;
+        margin-left: 228px;
+        padding: 1px;
+        border: 10px solid red;
+      }
+      
+      .dropzone {
+        width: 246px;
+        height: 246px;
+        float: left;
+        border: 1px dotted red;
       }
     </style>
     <script>
       /* This code disables all the touch events related to not moving the AR markers */
-      document.addEventListener('touchstart', function(event){
+      /*document.addEventListener('touchstart', function(event){
         event.preventDefault();
-      });
+      });*/
     
       // target elements with the "draggable" class
-      interact('.draggable')
-        .draggable({
-          // enable inertial throwing
-          inertia: true,
-          // keep the element within the area of it's parent
-          restrict: {
-            restriction: "parent",
-            endOnly: true,
-            elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-          },
-          // enable autoScroll
-          autoScroll: true,
+      interact('.draggable').draggable({
+        elementOrigin: { x: 0.5, y: 0.5 },
+        // enable inertial throwing
 
-          // call this function on every dragmove event
-          onmove: dragMoveListener,
-          // call this function on every dragend event
-          onend: function (event) {
-            var textEl = event.target.querySelector('p');
+        snap: {
+          targets: [
+            interact.createSnapGrid({x: 250, y: 250})
+          ],
+          range: Infinity,
+          relativePoints: [{x:50,y:50}],
+          endOnly: true
+        },
 
-            textEl && (textEl.textContent =
-              'moved a distance of '
-              + (Math.sqrt(event.dx * event.dx +
-                           event.dy * event.dy)|0) + 'px');
-          }
-        });
-
-        function dragMoveListener (event) {
+        inertia: false,
+        // keep the element within the area of it's parent
+        restrict: {
+          restriction: "parent",
+          endOnly: true,
+          elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
+        },
+        onmove: function dragMoveListener (event) {
           var target = event.target,
-              // keep the dragged position in the data-x/data-y attributes
-              x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-              y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
           // translate the element
           target.style.webkitTransform =
@@ -78,14 +80,22 @@
           target.setAttribute('data-x', x);
           target.setAttribute('data-y', y);
         }
-
-        // this is used later in the resizing and gesture demos
-        window.dragMoveListener = dragMoveListener;
+      });
+      
+      interact('.dropzone').dropzone({
+        accept: '.draggable',
+        overlap: 'center',
+      });
     </script>
   </head>
   <body>
     <div id="drag-area">      
-      <div id="play-area"></div>
+      <div id="play-area">
+        <div class="dropzone"></div>
+        <div class="dropzone"></div>
+        <div class="dropzone"></div>
+        <div class="dropzone"></div>
+      </div>
       <img src="assets/marker1.jpg" class="draggable" />
       <img src="assets/marker2.jpg" class="draggable" />
       <img src="assets/marker3.jpg" class="draggable" />

@@ -40,9 +40,9 @@
     </style>
     <script>
       /* This code disables all the touch events related to not moving the AR markers */
-      /*document.addEventListener('touchstart', function(event){
+      document.addEventListener('touchstart', function(event){
         event.preventDefault();
-      });*/
+      });
     
       // target elements with the "draggable" class
       interact('.draggable').draggable({
@@ -81,10 +81,32 @@
           target.setAttribute('data-y', y);
         }
       });
-      
+  
+      // drop zones for the drag and drop
       interact('.dropzone').dropzone({
         accept: '.draggable',
         overlap: 'center',
+      });
+
+      // tap event
+      interact('.draggable').on('tap', function (event) {
+        function pad (str, max) {
+          str = str.toString();
+          return str.length < max ? pad("0" + str, max) : str;
+        }
+      
+        event.preventDefault();
+        var target = event.currentTarget;
+        var src = target.src;
+        var match = src.match('-[0-9][0-9][0-9]');
+        
+        if (match == null) {
+          return;
+        }
+        
+        var newrot = '-' + pad(parseInt(match[0].substring(1,4)) + 90 % 360, 3);
+        console.log(newrot);
+        target.src = src.replace(match, newrot);
       });
     </script>
   </head>
@@ -96,7 +118,7 @@
         <div class="dropzone"></div>
         <div class="dropzone"></div>
       </div>
-      <img src="assets/marker1.jpg" class="draggable" />
+      <img src="assets/marker1-000.jpg" class="draggable" />
       <img src="assets/marker2.jpg" class="draggable" />
       <img src="assets/marker3.jpg" class="draggable" />
       <img src="assets/marker4.jpg" class="draggable" />

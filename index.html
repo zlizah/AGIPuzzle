@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- This code just disabled the zoom events -->
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <script src="libraries/interact.js/dist/interact.min.js"></script>
     <style>
       .draggable {
@@ -30,6 +31,11 @@
       }
     </style>
     <script>
+      /* This code disables all the touch events related to not moving the AR markers */
+      document.addEventListener('touchstart', function(event){
+        event.preventDefault();
+      });
+    
       // target elements with the "draggable" class
       interact('.draggable')
         .draggable({
